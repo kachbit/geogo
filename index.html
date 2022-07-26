@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
-	<title>Leaflet</title>
+	<title>Geoko</title>
 	
 	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 
@@ -28,15 +28,14 @@
 			height: 40%;
 			display: inline-block;
 		}
-		.btn {
+		.btn,#btn {
 			padding:10px;
 			border: 1px solid black;
 			cursor:pointer;
 			margin:10px;
 			width:50%;
 			font-size: 25px;
-			border-radius:5px
-			
+			border-radius:5px;
 		}
 	</style>
 
@@ -44,7 +43,7 @@
 </head>
 <body>
 
-
+		<h1 id="load" style="color:red;font-size:80px">LOADING...</h1>
  
 	<div id="panoramamap"></div> 
 	<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
@@ -54,7 +53,7 @@
 
 	
 <div id="map"></div> 
-<button class="btn">check</button>
+<button class="btn">check</button> <button id="btn" onclick="location.reload()">restart</button>
 <script>
 			var location1;
 			var panorama;
@@ -83,8 +82,9 @@
 				);
 				panorama.setOptions({
 				showRoadLabels: false
+				
 			});
-
+			document.querySelector('#load').style.display = 'none'
 			} else generateRandomPoint();
 			}
 			document.querySelector('#panoramamap').onclick = () => {
