@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,7 +86,8 @@
 				showRoadLabels: false
 				
 			});
-			document.querySelector('#load').style.display = 'none'
+			document.querySelector('#load').style.display = 'none';
+			init()
 			} else generateRandomPoint();
 			}
 			document.querySelector('#panoramamap').onclick = () => {
@@ -119,6 +121,7 @@
 	var map;
 	var userLoc;
 	var alreadyGuessed = false;
+    var country;
 	function getDistance(from, to) {
 		// in km
 		return (from.distanceTo(to)).toFixed(0)/1000;
@@ -139,6 +142,16 @@
 	}
 
 	function init() {
+
+
+        fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${location1['lat']}, ${location1['lng']}&key=AIzaSyAQS_xg1zCJD9I2OpnlFvTnuzeIc46eQOE`).then(function(response) {
+			return response.json();
+		}).then(function(data) {
+			country = data["plus_code"]["compound_code"].split(", ").pop();
+		}).catch(function() {
+			console.log("Error. could not get country name");
+		});
+
 		map = L.map('map').setView([0, 0], 0);
 		// 
 		var Stadia_AlidadeSmooth = L.tileLayer('https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=ee8be34b16b74e40ac5b3661895ff4ed', {
@@ -169,9 +182,9 @@
 	alreadyGuessed = true;
 	console.log()
 	lineate(userLoc,location1)
-	alert(`you guessed ${Math.round(getDistance(userLoc,location1)/1.609)} miles away!\n\nTap close and follow the line to find where the real location was`)
+	alert(`you guessed ${Math.round(getDistance(userLoc,location1)/1.609)} miles away! The correct country was ${country} \n\nTap close and follow the line to find where the real location was`)
   }
-  init()
+  
 </script>
 
 
