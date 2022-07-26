@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Leaflet</title>
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			text-align:center;
+		}
+		#panoramamap {
+			height: 40%;
+			width: 100%;
+  			margin: 0 auto;
+		}
+		#map {
+			width:70%;
+			height: 40%;
+			display: inline-block;
+		}
+		.btn {
+			padding:10px;
+			border: 1px solid black;
+			cursor:pointer;
+			margin:10px;
+			width:50%;
+			font-size: 25px;
+			border-radius:5px
+			
+		}
+	</style>
+
+	
+</head>
+<body>
+
+
+ 
+	<div id="panoramamap"></div> 
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  
+	<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQS_xg1zCJD9I2OpnlFvTnuzeIc46eQOE&callback=generateRandomPoint&libraries=&v=weekly" async></script>
+
+	
+<div id="map"></div> 
+<button class="btn">check</button>
+<script>
+			var location1;
+			var panorama;
+				function generateRandomPoint() {
+					console.log('generating....')
+			var sv = new google.maps.StreetViewService();
+			sv.getPanoramaByLocation(
+				new google.maps.LatLng(Math.random() * 180 - 90, Math.random() * 360 - 180), 500, processSVData
+			);
+			}
+
+			function processSVData(data, status) {
+			if (status == google.maps.StreetViewStatus.OK) {
+			 	location1 = data.location.latLng.toUrlValue(6).split(',').map(Number);
+				var [lat,lng] = location1;
+				location1 = {lat,lng}
+				panorama = new google.maps.StreetViewPanorama(
+				document.getElementById("panoramamap"), {
+					position: data.location.latLng,
+					pov: {
+					heading: 34,
+					pitch: 10,
+					},
+					disableDefaultUI: true,
+				}
+				);
+				panorama.setOptions({
+				showRoadLabels: false
+			});
+
+			} else generateRandomPoint();
+			}
+			document.querySelector('#panoramamap').onclick = () => {
+				location1 = panorama.position.toUrlValue(6).split(',').map(Number);
+				var [lat,lng] = location1;
+				location1 = {lat,lng}
+			}
+
+
+	//	.bindPopup('<b>Hello world!</b><br />I am a popup.').openPopup();
+
+	// var circle = L.circle([51.508, -0.11], {
+	// 	color: 'red',
+	// 	fillColor: '#f03',
+	// 	fillOpacity: 0.5,
+	// 	radius: 500
+	// }).addTo(map).bindPopup('I am a circle.');
+
+	// var polygon = L.polygon([
+	// 	[51.509, -0.08],
+	// 	[51.503, -0.06],
+	// 	[51.51, -0.047]
+	// ]).addTo(map).bindPopup('I am a polygon.');
+
+
+	// var popup = L.popup()
+	// 	.setLatLng([51.513, -0.09])
+	// 	.setContent('I am a standalone popup.')
+	// 	.openOn(map);
+	var marker;
+	var map;
+	var userLoc;
+	var alreadyGuessed = false;
+	function getDistance(from, to) {
+		// in km
+		return (from.distanceTo(to)).toFixed(0)/1000;
+	}
+	function onMapClick(e) {
+		// popup
+		// 	.setLatLng(e.latlng)
+		// 	.setContent('You clicked the map at ' + e.latlng.toString())
+		// 	.openOn(map);
+		if(!alreadyGuessed) {
+			map.eachLayer((layer) => {
+				if(layer['_latlng']!=undefined)
+					layer.remove();
+			});
+			marker = L.marker(e.latlng).addTo(map)
+			userLoc = e.latlng
+		}
+	}
+
+	function init() {
+		map = L.map('map').setView([0, 0], 0);
+		// 
+		var Stadia_AlidadeSmooth = L.tileLayer('https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=ee8be34b16b74e40ac5b3661895ff4ed', {
+			noWrap: true,
+		}).addTo(map);
+		map.setMaxBounds(  [[-90,-180],   [90,180]]  )
+		map.setZoom(2);
+		prompt(location1)
+	}
+	function prompt(loc) {
+		console.log('yes')
+		map.on('click', onMapClick);
+	}
+	function lineate(guess,loc) {
+		var polylinePoints = [
+			guess,loc
+  		];  
+		marker = L.marker(loc).addTo(map)
+		var polyline = L.polyline(polylinePoints, {color: 'blue', radius:500}).addTo(map);
+	}
+          
+//	lineate([20.5,78.9],[40.4,-3.7])
+  document.querySelector(".btn").onclick = () => {
+	map.eachLayer((layer) => {
+		if(layer['_latlng']!=undefined)
+		layer.remove();
+	});
+	alreadyGuessed = true;
+	console.log()
+	lineate(userLoc,location1)
+	alert(`you guessed ${Math.round(getDistance(userLoc,location1)/1.609)} miles away!`)
+  }
+  init()
+</script>
+
+
+
+</body>
+</html>
