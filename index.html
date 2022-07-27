@@ -1,193 +1,255 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
+
 	<title>Geoko</title>
-	
+
 	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+		integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+		crossorigin="" />
+	<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+		integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+		crossorigin=""></script>
+	<script>
+		
+		function toggleMap(map) {
+			console.log('-----------------map------------------')
+			if(document.querySelector('#map').style.display == 'none' || document.querySelector('#map').style.display == '') {
+				document.querySelector('#panoramamap').style.display = 'none';
+				document.querySelector('.btn').disabled = false;
+				document.querySelector('#map').style.display = 'block';
+				console.log(document.querySelector('#map').style.display);
+			} else {
+				document.querySelector('#panoramamap').style.display = 'block';
+				document.querySelector('.btn').disabled = true;
+				document.querySelector('#map').style.display = 'none'				
+				console.log('no......')
+			}
 
+		}
+	</script>
 	<style>
-		html, body {
+		html,
+		body {
 			height: 100%;
 			margin: 0;
-			text-align:center;
+			text-align: center;
 		}
+
 		#panoramamap {
-			height: 40%;
+			height: 100%;
 			width: 100%;
-  			margin: 0 auto;
+			margin: 0 auto;
 		}
+
 		#map {
-			width:70%;
-			height: 40%;
+			width: 100%;
+			height: 100%;
 			display: inline-block;
+			display: none;
+			z-index: 1;
 		}
-		.btn,#btn {
-			padding:10px;
-			border: 1px solid black;
-			cursor:pointer;
-			margin:10px;
-			width:50%;
-			font-size: 25px;
-			border-radius:5px;
+
+		.btn,
+		#btn {
+			padding: 20px;
+			border: 2px solid slategray;
+			cursor: pointer;
+			margin: 10px;
+			width: 100px;
+			font-size: 500;
+			border-radius: 89px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 22;
+			height: 100px;
+			font-family: arial;
+			font-size: 20px;
+			background: darkolivegreen;
+			color: white;
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		}
+
+		#btn {
+			margin-left: 130px;
+		}
+
+		.btn:hover,
+		#btn:hover {
+			background: darkslategray;
+			transition: all .2s ease-in-out;
+		}
+
+		.leaflet-control-zoom {
+			z-index: 33 !important;
 		}
 	</style>
 
-	
+
 </head>
+
 <body>
 
-		<h1 id="load" style="color:red;font-size:80px">LOADING...</h1>
- 
-	<div id="panoramamap"></div> 
-	<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-  
-	<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQS_xg1zCJD9I2OpnlFvTnuzeIc46eQOE&callback=generateRandomPoint&libraries=&v=weekly" async></script>
+	<h1 id="load" style="color:red;font-size:80px;margin-top:200px">LOADING...</h1>
 
-	
-<div id="map"></div> 
-<button class="btn">check</button> <button id="btn" onclick="location.reload()">restart</button>
-<script>
-	alert(`Instructions: \n\n -You will be spawned in a random place anywhere in the world. \n\n - look and move around in the place and try to guess where in the world you are.\n \n-Tap on a place on the lower map and click check to see how close you got to the real place --\n\n double tap on the road to move forward`)
-			var location1;
-			var panorama;
-				function generateRandomPoint() {
-					console.log('generating....')
+	<div id="panoramamap"></div>
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+	<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQS_xg1zCJD9I2OpnlFvTnuzeIc46eQOE&callback=generateRandomPoint&libraries=&v=weekly"
+		async></script>
+
+
+	<div id="map"></div>
+	<button class="btn">check</button> <button id="btn" onclick="location.reload()">restart</button>
+
+	<script>
+		document.querySelector('.btn').disabled = true;
+		alert(`Instructions: \n\n -You will be spawned in a random place anywhere in the world. \n\n - look and move around in the place and try to guess where in the world you are.\n \n-Tap on 'toggle map' tap on a place on the map then click check to see how close you got to the real place --\n\n double tap on the road to move forward`)
+		var location1;
+		var panorama;
+		function generateRandomPoint() {
+			console.log('generating....')
 			var sv = new google.maps.StreetViewService();
 			sv.getPanoramaByLocation(
 				new google.maps.LatLng(Math.random() * 180 - 90, Math.random() * 360 - 180), 500, processSVData
 			);
-			}
+		}
 
-			function processSVData(data, status) {
+		function processSVData(data, status) {
 			if (status == google.maps.StreetViewStatus.OK) {
-			 	location1 = data.location.latLng.toUrlValue(6).split(',').map(Number);
-				var [lat,lng] = location1;
-				location1 = {lat,lng}
+				location1 = data.location.latLng.toUrlValue(6).split(',').map(Number);
+				var [lat, lng] = location1;
+				location1 = { lat, lng }
 				panorama = new google.maps.StreetViewPanorama(
-				document.getElementById("panoramamap"), {
+					document.getElementById("panoramamap"), {
 					position: data.location.latLng,
 					pov: {
-					heading: 34,
-					pitch: 10,
+						heading: 34,
+						pitch: 10,
 					},
 					disableDefaultUI: true,
 				}
 				);
 				panorama.setOptions({
-				showRoadLabels: false
-				
-			});
-			document.querySelector('#load').style.display = 'none';
-			init()
+					showRoadLabels: false
+
+				});
+				document.querySelector('#load').style.display = 'none';
+				init()
 			} else generateRandomPoint();
-			}
-			document.querySelector('#panoramamap').onclick = () => {
-				location1 = panorama.position.toUrlValue(6).split(',').map(Number);
-				var [lat,lng] = location1;
-				location1 = {lat,lng}
-			}
+		}
+		document.querySelector('#panoramamap').onclick = () => {
+			location1 = panorama.position.toUrlValue(6).split(',').map(Number);
+			var [lat, lng] = location1;
+			location1 = { lat, lng }
+		}
 
 
-	//	.bindPopup('<b>Hello world!</b><br />I am a popup.').openPopup();
+		//	.bindPopup('<b>Hello world!</b><br />I am a popup.').openPopup();
 
-	// var circle = L.circle([51.508, -0.11], {
-	// 	color: 'red',
-	// 	fillColor: '#f03',
-	// 	fillOpacity: 0.5,
-	// 	radius: 500
-	// }).addTo(map).bindPopup('I am a circle.');
+		// var circle = L.circle([51.508, -0.11], {
+		// 	color: 'red',
+		// 	fillColor: '#f03',
+		// 	fillOpacity: 0.5,
+		// 	radius: 500
+		// }).addTo(map).bindPopup('I am a circle.');
 
-	// var polygon = L.polygon([
-	// 	[51.509, -0.08],
-	// 	[51.503, -0.06],
-	// 	[51.51, -0.047]
-	// ]).addTo(map).bindPopup('I am a polygon.');
+		// var polygon = L.polygon([
+		// 	[51.509, -0.08],
+		// 	[51.503, -0.06],
+		// 	[51.51, -0.047]
+		// ]).addTo(map).bindPopup('I am a polygon.');
 
 
-	// var popup = L.popup()
-	// 	.setLatLng([51.513, -0.09])
-	// 	.setContent('I am a standalone popup.')
-	// 	.openOn(map);
-	var marker;
-	var map;
-	var userLoc;
-	var alreadyGuessed = false;
-    var country;
-	function getDistance(from, to) {
-		// in km
-		return (from.distanceTo(to)).toFixed(0)/1000;
-	}
-	function onMapClick(e) {
-		// popup
-		// 	.setLatLng(e.latlng)
-		// 	.setContent('You clicked the map at ' + e.latlng.toString())
+		// var popup = L.popup()
+		// 	.setLatLng([51.513, -0.09])
+		// 	.setContent('I am a standalone popup.')
 		// 	.openOn(map);
-		if(!alreadyGuessed) {
+		var marker;
+		var map;
+		var userLoc;
+		var alreadyGuessed = false;
+		var country;
+		function getDistance(from, to) {
+			// in km
+			return (from.distanceTo(to)).toFixed(0) / 1000;
+		}
+		function onMapClick(e) {
+			// popup
+			// 	.setLatLng(e.latlng)
+			// 	.setContent('You clicked the map at ' + e.latlng.toString())
+			// 	.openOn(map);
+			if (!alreadyGuessed) {
+				map.eachLayer((layer) => {
+					if (layer['_latlng'] != undefined)
+						layer.remove();
+				});
+				marker = L.marker(e.latlng).addTo(map)
+				userLoc = e.latlng
+			}
+		}
+
+		function init() {
+
+
+			fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${location1['lat']}, ${location1['lng']}&key=AIzaSyAQS_xg1zCJD9I2OpnlFvTnuzeIc46eQOE`).then(function (response) {
+				return response.json();
+			}).then(function (data) {
+				country = data["plus_code"]["compound_code"].split(", ").pop();
+			}).catch(function () {
+				console.log("Error. could not get country name");
+			});
+
+			map = L.map('map').setView([0, 0], 0);
+			map.options.minZoom = 2;
+			// 
+			var Stadia_AlidadeSmooth = L.tileLayer('https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=ee8be34b16b74e40ac5b3661895ff4ed', {
+				noWrap: true,
+			}).addTo(map);
+			map.setMaxBounds([[-90, -180], [90, 180]])
+			map.setZoom(2);
+			map.invalidateSize(true);
+			prompt(location1)
+		}
+		function prompt(loc) {
+			console.log('yes')
+			map.on('click', onMapClick);
+		}
+		function lineate(guess, loc) {
+			var polylinePoints = [
+				guess, loc
+			];
+			marker = L.marker(loc).addTo(map)
+			var polyline = L.polyline(polylinePoints, { color: 'blue', radius: 500 }).addTo(map);
+		}
+
+		//	lineate([20.5,78.9],[40.4,-3.7])
+		document.querySelector(".btn").onclick = () => {
 			map.eachLayer((layer) => {
-				if(layer['_latlng']!=undefined)
+				if (layer['_latlng'] != undefined)
 					layer.remove();
 			});
-			marker = L.marker(e.latlng).addTo(map)
-			userLoc = e.latlng
+			alreadyGuessed = true;
+			console.log()
+			lineate(userLoc, location1)
+			alert(`you guessed ${Math.round(getDistance(userLoc, location1) / 1.609)} miles away! The correct country was ${country} \n\nTap close and follow the line to find where the real location was`)
 		}
-	}
+		function fixMap() {
+			map.invalidateSize(true);
+		}
+	</script>
 
-	function init() {
-
-
-        fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${location1['lat']}, ${location1['lng']}&key=AIzaSyAQS_xg1zCJD9I2OpnlFvTnuzeIc46eQOE`).then(function(response) {
-			return response.json();
-		}).then(function(data) {
-			country = data["plus_code"]["compound_code"].split(", ").pop();
-		}).catch(function() {
-			console.log("Error. could not get country name");
-		});
-
-		map = L.map('map').setView([0, 0], 0);
-		// 
-		var Stadia_AlidadeSmooth = L.tileLayer('https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=ee8be34b16b74e40ac5b3661895ff4ed', {
-			noWrap: true,
-		}).addTo(map);
-		map.setMaxBounds(  [[-90,-180],   [90,180]]  )
-		map.setZoom(2);
-		prompt(location1)
-	}
-	function prompt(loc) {
-		console.log('yes')
-		map.on('click', onMapClick);
-	}
-	function lineate(guess,loc) {
-		var polylinePoints = [
-			guess,loc
-  		];  
-		marker = L.marker(loc).addTo(map)
-		var polyline = L.polyline(polylinePoints, {color: 'blue', radius:500}).addTo(map);
-	}
-          
-//	lineate([20.5,78.9],[40.4,-3.7])
-  document.querySelector(".btn").onclick = () => {
-	map.eachLayer((layer) => {
-		if(layer['_latlng']!=undefined)
-		layer.remove();
-	});
-	alreadyGuessed = true;
-	console.log()
-	lineate(userLoc,location1)
-	alert(`you guessed ${Math.round(getDistance(userLoc,location1)/1.609)} miles away! The correct country was ${country} \n\nTap close and follow the line to find where the real location was`)
-  }
-  
-</script>
-
+	<button class="btn" style="bottom:0;left:0;top:unset;margin:20px;" onclick="toggleMap();fixMap()">toggle map</button>
 
 
 </body>
+
 </html>
