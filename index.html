@@ -210,8 +210,8 @@
 
 			map = L.map('map').setView([0, 0], 0);
 			map.options.minZoom = 2;
-			// 
-			var Stadia_AlidadeSmooth = L.tileLayer('https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=ee8be34b16b74e40ac5b3661895ff4ed', {
+			// https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=ee8be34b16b74e40ac5b3661895ff4ed
+			var Stadia_AlidadeSmooth = L.tileLayer('https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=XPIs2MtNY5E0YVXCb2eFXHkicbL7dlegsyz9juu2OM66dvDMRYstdW5T9ntc8u3V', {
 				noWrap: true,
 			}).addTo(map);
 			map.setMaxBounds([[-90, -180], [90, 180]])
