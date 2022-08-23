@@ -112,7 +112,7 @@
 
 	<script>
 		document.querySelector('.btn').disabled = true;
-		alert(`Instructions: \n\n -You will be spawned in a random place anywhere in the world. \n\n - look and move around in the place and try to guess where in the world you are.\n \n-Tap on 'toggle map' tap on a place on the map then click check to see how close you got to the real place --\n\n double tap on the road to move forward`)
+	//	alert(`Instructions: \n\n -You will be spawned in a random place anywhere in the world. \n\n - look and move around in the place and try to guess where in the world you are.\n \n-Tap on 'toggle map' tap on a place on the map then click check to see how close you got to the real place --\n\n double tap on the road to move forward`)
 		var location1;
 		var panorama;
 		function generateRandomPoint() {
@@ -200,10 +200,10 @@
 		function init() {
 
 
-			fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${location1['lat']}, ${location1['lng']}&key=AIzaSyAQS_xg1zCJD9I2OpnlFvTnuzeIc46eQOE`).then(function (response) {
+			fetch(`http://api.geonames.org/countryCodeJSON?lat=${location1['lat']}&lng=${location1['lng']}&username=geo3`).then(function (response) {
 				return response.json();
 			}).then(function (data) {
-				country = data["plus_code"]["compound_code"].split(", ").pop();
+				country = data["countryName"];
 			}).catch(function () {
 				console.log("Error. could not get country name");
 			});
