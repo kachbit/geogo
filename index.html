@@ -15,30 +15,42 @@
 	<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
 		integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
 		crossorigin=""></script>
-	<script>
-		
-		function toggleMap(map) {
-			console.log('-----------------map------------------')
-			if(document.querySelector('#map').style.display == 'none' || document.querySelector('#map').style.display == '') {
-				document.querySelector('#panoramamap').style.display = 'none';
-				document.querySelector('.btn').disabled = false;
-				document.querySelector('#map').style.display = 'block';
-				console.log(document.querySelector('#map').style.display);
-			} else {
-				document.querySelector('#panoramamap').style.display = 'block';
-				document.querySelector('.btn').disabled = true;
-				document.querySelector('#map').style.display = 'none'				
-				console.log('no......')
-			}
 
-		}
-	</script>
 	<style>
+        .loader {
+            position: absolute;
+    top: 40%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3c9144;
+  border-right: 16px solid green;
+  border-bottom: 16px solid #608754;
+  border-left: 16px solid #326124;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 		html,
 		body {
 			height: 100%;
 			margin: 0;
 			text-align: center;
+            background-color: #191a1a;
 		}
 
 		#panoramamap {
@@ -53,6 +65,7 @@
 			display: inline-block;
 			display: none;
 			z-index: 1;
+            background-color: #191a1a;
 		}
 
 		.btn,
@@ -65,15 +78,19 @@
 			font-size: 500;
 			border-radius: 89px;
 			position: absolute;
-			top: 0;
+			bottom: 0;
 			left: 0;
+            margin:20px;
 			z-index: 22;
 			height: 100px;
 			font-family: arial;
 			font-size: 20px;
-			background: darkolivegreen;
+			background-color: rgba(0, 0, 0, 0.411);
+            backdrop-filter: blur(8px);
+            text-shadow: 2px 2px 4px #000000;
 			color: white;
-			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgba(51, 51, 51, 0.377) 0px 0px 0px 3px;
+            transition: all .2s ease-in-out;
 		}
 
 		#btn {
@@ -82,13 +99,17 @@
 
 		.btn:hover,
 		#btn:hover {
-			background: darkslategray;
+			backdrop-filter: blur(20px);
+            background-color: rgba(0, 0, 0, 0.59);
 			transition: all .2s ease-in-out;
 		}
 
 		.leaflet-control-zoom {
 			z-index: 33 !important;
 		}
+        .leaflet-control-container {
+            display:none !important;
+        }
 	</style>
 
 
@@ -96,7 +117,7 @@
 
 <body>
 
-	<h1 id="load" style="color:red;font-size:80px;margin-top:200px">LOADING...</h1>
+	<div class="loader"></div>
 
 	<div id="panoramamap"></div>
 	<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
@@ -108,18 +129,33 @@
 
 
 	<div id="map"></div>
-	<button class="btn">check</button> <button id="btn" onclick="location.reload()">restart</button>
 
+    
+    
+    <button id="btn" style="right:0;left:unset;width:60px;height:60px" onclick="location.reload()">
+    
+    
+        <svg style="padding-bottom:10px" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+            <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+            <g><path d="M570,86V10L290,185l280,175V228.5c140,32,245,156.9,245,306.5c0,173.7-141.3,315-315,315S185,708.7,185,535c0-38.7-31.3-70-70-70s-70,31.3-70,70c0,250.9,204.1,455,455,455s455-204.1,455-455C955,308,787.6,119.8,570,86z"/></g>
+            </svg>
+    
+    </button>
+    <button class="btn" id="check1" style="bottom:0;left:0;top:unset;margin:20px;margin-left:150px">
+        
+        <svg fill="white" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.877 101.052" enable-background="new 0 0 122.877 101.052" xml:space="preserve"><g><path d="M4.43,63.63c-2.869-2.755-4.352-6.42-4.427-10.11c-0.074-3.689,1.261-7.412,4.015-10.281 c2.752-2.867,6.417-4.351,10.106-4.425c3.691-0.076,7.412,1.255,10.283,4.012l24.787,23.851L98.543,3.989l1.768,1.349l-1.77-1.355 c0.141-0.183,0.301-0.339,0.479-0.466c2.936-2.543,6.621-3.691,10.223-3.495V0.018l0.176,0.016c3.623,0.24,7.162,1.85,9.775,4.766 c2.658,2.965,3.863,6.731,3.662,10.412h0.004l-0.016,0.176c-0.236,3.558-1.791,7.035-4.609,9.632l-59.224,72.09l0.004,0.004 c-0.111,0.141-0.236,0.262-0.372,0.368c-2.773,2.435-6.275,3.629-9.757,3.569c-3.511-0.061-7.015-1.396-9.741-4.016L4.43,63.63 L4.43,63.63z"/></g></svg>
+
+    </button> 
 	<script>
-		document.querySelector('.btn').disabled = true;
 	//	alert(`Instructions: \n\n -You will be spawned in a random place anywhere in the world. \n\n - look and move around in the place and try to guess where in the world you are.\n \n-Tap on 'toggle map' tap on a place on the map then click check to see how close you got to the real place --\n\n double tap on the road to move forward`)
 		var location1;
 		var panorama;
+        var counter = 0;
 		function generateRandomPoint() {
-			console.log('generating....')
+			console.log('generating.... attempt '+counter++)
 			var sv = new google.maps.StreetViewService();
 			sv.getPanoramaByLocation(
-				new google.maps.LatLng(Math.random() * 180 - 90, Math.random() * 360 - 180), 500, processSVData
+				new google.maps.LatLng(Math.random() * 180 - 90, Math.random() * 360 - 180), 6123, processSVData
 			);
 		}
 
@@ -142,7 +178,7 @@
 					showRoadLabels: false
 
 				});
-				document.querySelector('#load').style.display = 'none';
+				document.querySelector('.loader').style.display = 'none';
 				init()
 			} else generateRandomPoint();
 		}
@@ -233,6 +269,7 @@
 
 		//	lineate([20.5,78.9],[40.4,-3.7])
 		document.querySelector(".btn").onclick = () => {
+            map.setView([0, 0], 0);
 			map.eachLayer((layer) => {
 				if (layer['_latlng'] != undefined)
 					layer.remove();
@@ -240,14 +277,72 @@
 			alreadyGuessed = true;
 			console.log()
 			lineate(userLoc, location1)
-			alert(`you guessed ${Math.round(getDistance(userLoc, location1) / 1.609)} miles away! The correct country was ${country} \n\nTap close and follow the line to find where the real location was`)
+            
+			alert(`you guessed ${Math.round(getDistance(userLoc, location1) / 1.609)} miles away. The correct country was ${country}`)
 		}
 		function fixMap() {
 			map.invalidateSize(true);
 		}
 	</script>
 
-	<button class="btn" style="bottom:0;left:0;top:unset;margin:20px;" onclick="toggleMap();fixMap()">toggle map</button>
+	<button class="btn" id="mapBtn" style="bottom:0;left:0;top:unset;margin:20px;" onclick="toggleMap();fixMap()">
+    
+ 
+        <!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+             viewBox="0 0 100.353 100.352" style="enable-background:new 0 0 100.353 100.352;" xml:space="preserve">
+        <g>
+            <path d="M69.55,58.903c-0.005,0-0.011,0-0.016,0c-0.523-0.006-1.005-0.283-1.273-0.732L54.003,34.226
+                c-0.04-0.067-0.074-0.136-0.103-0.208c-1.778-2.919-2.716-6.264-2.716-9.693c0.018-10.311,8.414-18.689,18.72-18.689
+                c0.008,0,0.015,0,0.023,0c5.003,0.007,9.7,1.961,13.226,5.501c3.524,3.537,5.46,8.239,5.453,13.238l0,0
+                c0,3.378-0.934,6.705-2.704,9.642c-0.034,0.096-0.079,0.188-0.134,0.277L70.823,58.199C70.547,58.636,70.066,58.903,69.55,58.903z
+                 M56.719,32.923l12.862,21.601l13.476-21.555c0.034-0.092,0.077-0.182,0.13-0.267c1.582-2.527,2.418-5.407,2.418-8.328
+                c0-0.001,0-0.001,0-0.002c0.007-4.2-1.619-8.148-4.578-11.119c-2.96-2.971-6.904-4.611-11.104-4.618c-0.006,0-0.013,0-0.02,0
+                c-8.655,0-15.705,7.035-15.719,15.692c0,2.954,0.831,5.836,2.402,8.332C56.64,32.742,56.684,32.831,56.719,32.923z"/>
+            <path d="M69.909,31.352c-0.005,0-0.01,0-0.016,0c-2.112,0-4.101-0.825-5.596-2.323c-1.497-1.5-2.319-3.492-2.315-5.611
+                c0.002-2.112,0.828-4.099,2.326-5.593c1.496-1.491,3.482-2.312,5.595-2.312c0.002,0,0.005,0,0.008,0
+                c4.365,0.005,7.914,3.563,7.91,7.932l0,0c-0.002,2.115-0.828,4.103-2.326,5.597C74,30.532,72.017,31.352,69.909,31.352z
+                 M69.902,18.513c-1.312,0-2.547,0.51-3.476,1.437c-0.93,0.927-1.443,2.161-1.444,3.473c-0.002,1.317,0.509,2.555,1.439,3.487
+                c0.928,0.93,2.163,1.442,3.475,1.442c0.003,0,0.006,0,0.01,0c1.312,0,2.543-0.509,3.471-1.434c0.93-0.927,1.443-2.162,1.444-3.475
+                c0.002-2.714-2.202-4.926-4.914-4.929C69.906,18.513,69.904,18.513,69.902,18.513z M76.321,23.444h0.01H76.321z"/>
+            <path d="M94.399,80.181H4.541c-0.504,0-0.974-0.253-1.252-0.674c-0.277-0.42-0.325-0.952-0.127-1.416l16.345-38.242
+                c0.236-0.552,0.779-0.911,1.379-0.911h38.568c0.829,0,1.5,0.671,1.5,1.5s-0.671,1.5-1.5,1.5H21.876L6.813,77.18h85.313
+                L77.528,43.03c-0.326-0.762,0.028-1.643,0.79-1.969c0.759-0.325,1.643,0.027,1.969,0.79L95.778,78.09
+                c0.198,0.464,0.15,0.996-0.127,1.416C95.373,79.928,94.903,80.181,94.399,80.181z"/>
+            <path d="M69.727,79.912c-0.752,0-1.401-0.564-1.488-1.33c-0.009-0.074-0.967-7.454-11.3-9.207c-0.961-0.163-2.494-0.312-4.27-0.483
+                c-9.779-0.946-18.699-2.174-20.419-6.747c-1.11-2.95,0.512-5.199,1.814-7.006c1.426-1.978,1.896-2.842,1.168-4.083
+                c-0.461-0.786-1.929-1.426-3.349-2.045c-2.78-1.212-6.588-2.872-6.608-7.422c-0.004-0.829,0.665-1.503,1.493-1.507
+                c0.002,0,0.005,0,0.007,0c0.826,0,1.496,0.667,1.5,1.493c0.011,2.42,1.824,3.385,4.808,4.686c1.86,0.811,3.783,1.649,4.738,3.278
+                c1.785,3.044-0.011,5.536-1.322,7.355c-1.23,1.706-1.958,2.821-1.44,4.195c1.205,3.203,12.481,4.293,17.9,4.818
+                c1.833,0.177,3.416,0.33,4.482,0.511c12.532,2.127,13.734,11.43,13.779,11.825c0.094,0.823-0.497,1.566-1.32,1.66
+                C69.842,79.909,69.784,79.912,69.727,79.912z"/>
+        </g>
+        </svg>
+        
+    
+    </button>
+
+
+	<script>
+		document.querySelector("#check1").style.display = "none";
+		function toggleMap(map) {
+			if(document.querySelector('#map').style.display == 'none' || document.querySelector('#map').style.display == '') {
+				document.querySelector('#panoramamap').style.display = 'none';
+				document.querySelector('.btn').disabled = false;
+                document.querySelector("#check1").style.display="block";
+				document.querySelector('#map').style.display = 'block';
+				console.log(document.querySelector('#map').style.display);
+			} else {
+				document.querySelector('#panoramamap').style.display = 'block';
+				document.querySelector('.btn').disabled = true;
+                document.querySelector("#check1").style.display="none";
+				document.querySelector('#map').style.display = 'none'				
+				console.log('no......')
+			}
+
+		}
+	</script>
+
 
 
 </body>
