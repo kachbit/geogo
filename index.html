@@ -291,7 +291,7 @@
 			console.log()
 			lineate(userLoc, location1)
             
-			alert(`you guessed ${Math.round(getDistance(userLoc, location1) / 1.609)} miles away. The correct country was ${country}`)
+			alert(`you guessed ${Math.round(getDistance(userLoc, location1) / 1.609)} miles away. The correct country was ${(country == "undefined" || country == undefined) ? "some tiny island or the ocean." : country }`)
 		}
 		function fixMap() {
 			map.invalidateSize(true);
