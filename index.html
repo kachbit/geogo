@@ -287,6 +287,15 @@
 				if (layer['_latlng'] != undefined)
 					layer.remove();
 			});
+			
+			fetch(`http://api.geonames.org/countryCodeJSON?lat=${location1['lat']}&lng=${location1['lng']}&username=geo3`).then(function (response) {
+				return response.json();
+			}).then(function (data) {
+				country = data["countryName"];
+			}).catch(function () {
+				console.log("Error. could not get country name");
+			});
+
 			alreadyGuessed = true;
 			console.log()
 			lineate(userLoc, location1)
